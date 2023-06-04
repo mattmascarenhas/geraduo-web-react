@@ -1,95 +1,56 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import CreateAdBanner from "@/components/CreateAdBanner";
+import * as Dialog from "@radix-ui/react-dialog";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import React from "react";
+import "keen-slider/keen-slider.min.css";
+import { useKeenSlider } from "keen-slider/react"; // import from 'keen-slider/react.es' for to get an ES module
+import CreateAdModal from "@/components/CreateAdModal";
+
+interface IGame {
+  id: string;
+  title: string;
+  bannerUrl: string;
+}
 
 export default function Home() {
+  const [games, setGames] = useState<IGame[]>([]);
+  const [ref] = useKeenSlider<HTMLDivElement>({
+    slides: {
+      perView: 6.2,
+      spacing: 15,
+    },
+  });
+  useEffect(() => {
+    axios
+      .get("http://localhost:5146/v1/games")
+      .then((res) => setGames(res.data));
+  }, []);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div className="container">
+      <img src="logo-esports.svg" alt="" />
+      <h1 className="h1Title">Encontre seu duo aqui!</h1>
+      <div className="gameBanner keen-slider" ref={ref}>
+        {games.map((game) => {
+          return (
+            <div
+              className="containerGameBanner keen-slider__slide"
+              key={game.id}
+            >
+              <img src={game.bannerUrl} alt="" width={204} height={272} />
+              <div className="gameBannerInfo">
+                <strong className="titleGameBanner">{game.title}</strong>
+              </div>
+            </div>
+          );
+        })}
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      <Dialog.Root>
+        <CreateAdBanner />
+        <CreateAdModal />
+      </Dialog.Root>
+    </div>
+  );
 }
