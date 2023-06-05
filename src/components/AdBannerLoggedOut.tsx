@@ -2,6 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import MagnifierIcon from "./icons/Magnifier";
 import Register from "./icons/Register";
 import LoginIcon from "./icons/Login";
+import Link from "next/link";
 
 export function AdBannerLoggedOut() {
   return (
@@ -17,12 +18,16 @@ export function AdBannerLoggedOut() {
         </div>
         <div className="buttonsLoggedOut">
           <button className="buttonRegister">
-            <Register />
-            Cadastre-se
+            <Link href="/register">
+              <Register />
+              Cadastre-se
+            </Link>
           </button>
           <button className="buttonLogin">
-            <LoginIcon />
-            Entrar
+            <Link href="/login">
+              <LoginIcon />
+              Entrar
+            </Link>
           </button>
         </div>
       </div>

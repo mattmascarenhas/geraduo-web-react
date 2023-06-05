@@ -3,7 +3,14 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-color: #171717;
-  color: wheat;
+  color: #e7f6f2;
+}
+a {
+  display: flex;
+  text-decoration: none;
+  color: #171717;
+  align-items: center;
+  gap: 5px;
 }
 input {
   --tw-bg-opacity: 1;
@@ -33,14 +40,14 @@ select {
   line-height: 1;
   font-weight: 900;
 
-  margin-top: 80px;
+  margin-top: 50px;
 }
 
 .gameBanner {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 24px;
-  margin-top: 64px;
+  margin-top: 30px;
 }
 /* ========================== GameBanner =========================== */
 

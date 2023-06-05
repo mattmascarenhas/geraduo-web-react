@@ -1,0 +1,22 @@
+.containerRegister {
+  display: grid;
+  color: #e7f6f2;
+  align-items: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-content: space-between;
+
+  margin-left: 200px;
+  margin-right: 200px;
+}
+.gridLeftRegister {
+  margin-top: 150px;
+  justify-content: center;
+}
+
+.gridRightRegister {
+  display: flex;
+  flex-direction: column;
+  justify-content: right;
+  align-items: center;
+  margin-top: 100px;
+}
