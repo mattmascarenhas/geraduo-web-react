@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import React from "react";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react"; // import from 'keen-slider/react.es' for to get an ES module
-import AdBannerLoggedOut from "@/components/AdBannerLoggedOut";
+import CreateAdModal from "@/components/CreateAdModal";
 
 interface IGame {
   id: string;
@@ -16,30 +16,23 @@ interface IGame {
 
 export default function Home() {
   const [games, setGames] = useState<IGame[]>([]);
-  const sliderOptions = {
+  const [ref] = useKeenSlider<HTMLDivElement>({
     slides: {
       perView: 6.2,
-      spacing: 10,
+      spacing: 15,
     },
-  };
-  const [internalSliderRef, internalSlider] = useKeenSlider(sliderOptions);
-
+  });
   useEffect(() => {
     axios
       .get("http://localhost:5146/v1/games")
       .then((res) => setGames(res.data));
   }, []);
 
-  useEffect(() => {
-    internalSlider.current?.update({
-      ...sliderOptions,
-    });
-  }, [internalSlider, sliderOptions]);
   return (
     <div className="container">
       <img src="logo-esports.svg" alt="" />
       <h1 className="h1Title">Encontre seu duo aqui!</h1>
-      <div className="gameBanner keen-slider" ref={internalSliderRef}>
+      <div className="gameBanner keen-slider" ref={ref}>
         {games.map((game) => {
           return (
             <div
@@ -55,7 +48,8 @@ export default function Home() {
         })}
       </div>
       <Dialog.Root>
-        <AdBannerLoggedOut />
+        <CreateAdBanner />
+        <CreateAdModal />
       </Dialog.Root>
     </div>
   );
