@@ -1,9 +1,9 @@
 body {
-  background-image: url("../../public/bg.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-color: #171717;
+  background-color: #0e0a0b;
   color: #e7f6f2;
+  background-image: url("../../public/bg-red.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 a {
   display: flex;
@@ -97,7 +97,7 @@ select {
 }
 
 .createAdBannerContainerPlus {
-  background-color: #212a3e;
+  background-color: #1a2b2b;
   padding-left: 32px;
   padding-right: 32px;
   padding-top: 24px;
@@ -151,7 +151,7 @@ select {
   padding-top: 8px;
   padding-bottom: 8px;
 
-  background-color: #1291e6;
+  background-color: #349e97;
   color: #171717;
   border-radius: 8px;
   display: flex;
@@ -166,7 +166,7 @@ select {
   padding-top: 8px;
   padding-bottom: 8px;
 
-  background-color: #f1d00a;
+  background-color: #b8af03;
   color: #171717;
   border-radius: 8px;
   display: flex;
@@ -176,10 +176,10 @@ select {
 }
 
 .buttonLogin:hover {
-  background-color: #f8de48;
+  background-color: #ddc850;
 }
 .buttonRegister:hover {
-  background-color: #51baff;
+  background-color: #49cfc6;
 }
 /* ========================== CreateAdModal =========================== */
 .createAdOverlay {

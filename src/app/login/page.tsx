@@ -1,7 +1,10 @@
 "use client";
+import axios from "axios";
 import Link from "next/link";
-import { HTMLAttributes } from "react";
+import { FormEvent, HTMLAttributes } from "react";
 import { useState } from "react";
+import { getSession, signIn } from "next-auth/react";
+import Router from "next/router";
 
 interface ICustomDivProps extends HTMLAttributes<HTMLDivElement> {
   value: boolean;
@@ -18,12 +21,27 @@ export function Login() {
     value: errorMessage,
     // outras propriedades HTML válidas para um elemento <div>
   };
-  function onSubmit() {}
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    
+    const res = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+    
+    if (res?.status === 401) {
+      setErrorMessage(true);
+    } else {
+      setErrorMessage(false);
+      Router.push("/");
+    }
+  }
 
   return (
     <div className="containerLogin ">
       <form onSubmit={onSubmit}>
-        <div className="cardLogin">
+        <div className="">
           <div className="logoLogin">
             <Link href="/">
               <img src="logo-esports.svg" alt="" />
@@ -69,7 +87,7 @@ export function Login() {
             />
           </div>
           <div className="containerButtonLogin">
-            <button className="buttonLogin" disabled={isDisabled} type="submit">
+            <button className="buttonLogin" type="submit">
               Login
             </button>
             <Link className="linkForgetPasswordLogin" href="#">

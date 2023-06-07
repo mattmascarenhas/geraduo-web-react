@@ -2,16 +2,17 @@
   display: grid;
   color: #e7f6f2;
   align-items: center;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr 2fr; /* Usando 2/3 (dois terços) e 1/3 (um terço) da tela */
   justify-content: space-between;
 
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 100px;
+  margin-right: 100px;
 }
-.gridLeftRegister {
+/* .gridLeftRegister {
+  display: flex;
   margin-top: 150px;
   justify-content: center;
-}
+} */
 
 .gridRightRegister {
   display: flex;
@@ -19,4 +20,44 @@
   justify-content: right;
   align-items: center;
   margin-top: 100px;
+}
+
+.formContainerRegister {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.h1Register {
+  font-size: 35px;
+  margin-bottom: 50px;
+  font-weight: bolder;
+  color: #a0a0a0;
+}
+/* ============================== Container Label =================================== */
+.containerLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 109%;
+}
+
+.labelRegister {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #e7f6f2;
+}
+
+.inputRegister {
+  width: 85%;
+  padding: 7px;
+  border-radius: 6px;
+  background-color: #e7f6f2;
+  color: #010814;
+  line-height: 1.25;
+  font-size: medium;
+  font-weight: bold;
 }
