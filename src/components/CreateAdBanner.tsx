@@ -1,5 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import MagnifierIcon from "./icons/Magnifier";
+import SignOutButton from "./SignOutButton";
 
 export function CreateAdBanner() {
   return (
@@ -13,10 +14,13 @@ export function CreateAdBanner() {
             Publique um anúncio para encontrar novos players!
           </span>
         </div>
-        <Dialog.Trigger className="buttonCreateAd">
-          <MagnifierIcon />
-          Publicar anúncio
-        </Dialog.Trigger>
+        <div className="buttonsPlayerLogged">
+          <Dialog.Trigger className="buttonCreateAd">
+            <MagnifierIcon />
+            Publicar anúncio
+          </Dialog.Trigger>
+          <SignOutButton />
+        </div>
       </div>
     </div>
   );

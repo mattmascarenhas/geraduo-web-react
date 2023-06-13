@@ -24,7 +24,7 @@ export function AdBannerLoggedOut() {
             </Link>
           </button>
           <button className="buttonLogin">
-            <Link href="/login">
+            <Link href="/signin">
               <LoginIcon />
               Entrar
             </Link>

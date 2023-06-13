@@ -13,13 +13,11 @@ a {
   gap: 5px;
 }
 input {
-  --tw-bg-opacity: 1;
-  background-color: rgb(24 24 27 / var(--tw-bg-opacity));
+  background-color: #18181b;
   color: #e7f6f2;
 }
 select {
-  --tw-bg-opacity: 1;
-  background-color: rgb(24 24 27 / var(--tw-bg-opacity));
+  background-color: #18181b;
   color: #e7f6f2;
 }
 
@@ -126,8 +124,7 @@ select {
   padding-top: 8px;
   padding-bottom: 8px;
 
-  --tw-bg-opacity: 1;
-  background-color: rgb(139 92 246 / var(--tw-bg-opacity));
+  background-color: #18181b;
   color: #e7f6f2;
   border-radius: 8px;
   display: flex;
@@ -137,8 +134,7 @@ select {
 }
 
 .buttonCreateAd:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(124 58 237 / var(--tw-bg-opacity));
+  background-color: #000000;
 }
 /* ========================== CreateAdMoAdBannerLoggedOutdal =========================== */
 .buttonsLoggedOut {
@@ -194,8 +190,7 @@ select {
 
 .createAdContent {
   position: fixed;
-  --tw-bg-opacity: 1;
-  background-color: rgb(42 38 52 / var(--tw-bg-opacity));
+  background-color: #1a1a20;
   color: #e7f6f2;
 
   padding-top: 32px;
@@ -232,10 +227,10 @@ select {
 }
 
 .createAdSelectInput {
-  padding-top: 0.75rem /* 12px */;
-  padding-bottom: 0.75rem /* 12px */;
-  padding-left: 1rem /* 16px */;
-  padding-right: 1rem /* 16px */;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 16px;
+  padding-right: 16px;
   font-size: 0.875rem /* 14px */;
   line-height: 1.25rem /* 20px */;
   border-radius: 4px;
@@ -257,4 +252,44 @@ select {
 
 .inputClass::placeholder {
   color: #a8a8a8;
+}
+.toggleDaysOfWeek {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.daysOfWeek {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.25rem;
+  color: #ffffff;
+}
+
+.daysOfWeekOn {
+  background-color: #10d6d3;
+  color: #000000;
+}
+
+.daysOfWeekOff {
+  background-color: #18181b;
+}
+
+.hoursDayContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.hoursDay {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+/* ========================== HomePage - SignIn =========================== */
+
+.buttonsPlayerLogged {
+  display: flex;
+  gap: 10px;
 }

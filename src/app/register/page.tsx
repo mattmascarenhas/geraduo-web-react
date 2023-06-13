@@ -1,6 +1,6 @@
 "use client";
-import InputLabel from "@/components/InputLabel";
-import InputLabelPassword from "@/components/InputLabelPassword";
+import InputLabel from "@/components/inputs/InputLabel";
+import InputLabelPassword from "@/components/inputs/InputLabelPassword";
 import { FormEvent } from "react";
 import Link from "next/link";
 import axios from "axios";

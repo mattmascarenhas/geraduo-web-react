@@ -1,56 +1,127 @@
 "use client";
-import CreateAdBanner from "@/components/CreateAdBanner";
-import * as Dialog from "@radix-ui/react-dialog";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import React from "react";
-import "keen-slider/keen-slider.min.css";
-import { useKeenSlider } from "keen-slider/react"; // import from 'keen-slider/react.es' for to get an ES module
-import CreateAdModal from "@/components/CreateAdModal";
+import Link from "next/link";
+import { FormEvent, HTMLAttributes, useEffect } from "react";
+import { useState } from "react";
+import {
+  GetSessionParams,
+  getSession,
+  signIn,
+  useSession,
+} from "next-auth/react";
+import Router, { useRouter } from "next/router";
+import SignInGoogleButton from "@/components/SignInGoogleButton";
 
-interface IGame {
-  id: string;
-  title: string;
-  bannerUrl: string;
+interface ICustomDivProps extends HTMLAttributes<HTMLDivElement> {
+  value: boolean;
 }
-
-export default function Home() {
-  const [games, setGames] = useState<IGame[]>([]);
-  const [ref] = useKeenSlider<HTMLDivElement>({
-    slides: {
-      perView: 6.2,
-      spacing: 15,
-    },
+export function Login() {
+  const { data: session } = useSession();
+  const [errorMessage, setErrorMessage] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [data, setData] = useState({
+    email: "",
+    password: "",
   });
+
   useEffect(() => {
-    axios
-      .get("http://localhost:5146/v1/games")
-      .then((res) => setGames(res.data));
+    checkSession();
   }, []);
+  console.log(session);
+
+  async function checkSession() {
+    const session = await getSession();
+
+    if (session) {
+      window.location.href = "/";
+    }
+  }
+
+  const divProps: ICustomDivProps = {
+    value: errorMessage,
+    // outras propriedades HTML válidas para um elemento <div>
+  };
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const res = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (res?.status === 401) {
+      setErrorMessage(true);
+    } else {
+      setErrorMessage(false);
+      Router.push("/");
+    }
+  }
 
   return (
-    <div className="container">
-      <img src="logo-esports.svg" alt="" />
-      <h1 className="h1Title">Encontre seu duo aqui!</h1>
-      <div className="gameBanner keen-slider" ref={ref}>
-        {games.map((game) => {
-          return (
-            <div
-              className="containerGameBanner keen-slider__slide"
-              key={game.id}
-            >
-              <img src={game.bannerUrl} alt="" width={204} height={272} />
-              <div className="gameBannerInfo">
-                <strong className="titleGameBanner">{game.title}</strong>
-              </div>
-            </div>
-          );
-        })}
+    <div className="containerLogin ">
+      <form onSubmit={onSubmit}>
+        <div className="">
+          <div className="logoLogin">
+            <Link href="/">
+              <img src="logo-esports.svg" alt="" />
+            </Link>
+          </div>
+          <div className="messagePasswordLogin" {...divProps}>
+            {errorMessage && <span>e-mail ou senha incorreta.</span>}
+          </div>
+          <div style={{ marginBottom: "16px" }}>
+            <label className="labelLogin" htmlFor="email">
+              E-mail
+            </label>
+            <input
+              className="inputLogin"
+              id="email"
+              type="email"
+              placeholder="E-mail"
+              value={data.email}
+              onChange={(e) =>
+                setData((prevState) => ({
+                  ...prevState,
+                  email: e.target.value,
+                }))
+              }
+            />
+          </div>
+          <div style={{ marginBottom: "10px" }}>
+            <label className="labelLogin" htmlFor="password">
+              Senha
+            </label>
+            <input
+              className="inputLogin"
+              id="password"
+              type="password"
+              placeholder="Senha"
+              value={data.password}
+              onChange={(e) =>
+                setData((prevState) => ({
+                  ...prevState,
+                  password: e.target.value,
+                }))
+              }
+            />
+          </div>
+          <div className="containerButtonLogin">
+            <button className="buttonLogin" type="submit">
+              Login
+            </button>
+            <SignInGoogleButton />
+          </div>
+          <Link className="linkForgetPasswordLogin" href="#">
+            Esqueceu a senha?
+          </Link>
+        </div>
+      </form>
+      <div className="footerLogin">
+        <p>&copy;2023 Matheus Mascarenhas DEV. Todos os direitos reservados.</p>
       </div>
-      <Dialog.Root>
-        <CreateAdBanner />
-        <CreateAdModal />
-      </Dialog.Root>
     </div>
   );
 }
+
+export default Login;

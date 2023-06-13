@@ -61,8 +61,9 @@
 .containerButtonLogin {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   margin-top: 15px;
+  gap: 7px;
 }
 
 .buttonLogin {
@@ -77,11 +78,12 @@
 
 .linkForgetPasswordLogin {
   display: flex;
-  justify-content: end;
-  align-items: end;
+  justify-content: center;
+  align-items: center;
   font-weight: bold;
   font-size: 0.875rem;
   color: #c2c8f0;
+  margin-top: 10px;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
@@ -92,4 +94,9 @@
   margin-top: 20px;
   color: #c2c8f0;
   font-size: 0.75rem;
+}
+
+.buttonGoogle {
+  background-color: #e7f6f2;
+  border-radius: 7px;
 }

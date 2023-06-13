@@ -7,6 +7,8 @@ import React from "react";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react"; // import from 'keen-slider/react.es' for to get an ES module
 import AdBannerLoggedOut from "@/components/AdBannerLoggedOut";
+import { useSession } from "next-auth/react";
+import CreateAdModal from "@/components/CreateAdModal";
 
 interface IGame {
   id: string;
@@ -16,6 +18,7 @@ interface IGame {
 
 export default function Home() {
   const [games, setGames] = useState<IGame[]>([]);
+  const { data: session } = useSession();
   const sliderOptions = {
     slides: {
       perView: 6.2,
@@ -23,6 +26,8 @@ export default function Home() {
     },
   };
   const [internalSliderRef, internalSlider] = useKeenSlider(sliderOptions);
+
+  console.log(session);
 
   useEffect(() => {
     axios
@@ -35,6 +40,7 @@ export default function Home() {
       ...sliderOptions,
     });
   }, [internalSlider, sliderOptions]);
+
   return (
     <div className="container">
       <img src="logo-esports.svg" alt="" />
@@ -54,9 +60,16 @@ export default function Home() {
           );
         })}
       </div>
-      <Dialog.Root>
-        <AdBannerLoggedOut />
-      </Dialog.Root>
+      {session ? (
+        <Dialog.Root>
+          <CreateAdBanner />
+          <CreateAdModal />
+        </Dialog.Root>
+      ) : (
+        <Dialog.Root>
+          <AdBannerLoggedOut />
+        </Dialog.Root>
+      )}
     </div>
   );
 }
