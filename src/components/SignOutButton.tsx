@@ -1,11 +1,19 @@
 "use client";
-import { signOut } from "next-auth/react";
+import { useContext } from "react";
 import LoginIcon from "./icons/Login";
+import { Context } from "@/Context/AuthContext";
 
 export function SignOutButton() {
+  const { handleLogout } = useContext(Context) as {
+    handleLogout: any;
+  };
   return (
     <>
-      <button type="button" className="buttonLogin" onClick={() => signOut()}>
+      <button
+        type="button"
+        className="buttonLogin"
+        onClick={() => handleLogout()}
+      >
         Sair
         <LoginIcon />
       </button>

@@ -2,13 +2,13 @@
 import CreateAdBanner from "@/components/CreateAdBanner";
 import * as Dialog from "@radix-ui/react-dialog";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import React from "react";
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react"; // import from 'keen-slider/react.es' for to get an ES module
 import AdBannerLoggedOut from "@/components/AdBannerLoggedOut";
-import { useSession } from "next-auth/react";
 import CreateAdModal from "@/components/CreateAdModal";
+import { Context } from "@/Context/AuthContext";
 
 interface IGame {
   id: string;
@@ -17,8 +17,11 @@ interface IGame {
 }
 
 export default function Home() {
+  const { authenticated } = useContext(Context) as {
+    authenticated: boolean;
+  };
   const [games, setGames] = useState<IGame[]>([]);
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const sliderOptions = {
     slides: {
       perView: 6.2,
@@ -26,13 +29,22 @@ export default function Home() {
     },
   };
   const [internalSliderRef, internalSlider] = useKeenSlider(sliderOptions);
+  const [loading, setLoading] = useState(true); // Nova flag de carregamento
 
-  console.log(session);
+  //console.log(session);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5146/v1/games")
-      .then((res) => setGames(res.data));
+    async function fetchData() {
+      try {
+        const response = await axios.get("http://localhost:5146/v1/games");
+        setGames(response.data);
+        setLoading(false); // Marca o carregamento como concluído
+      } catch (error) {
+        console.error("Erro ao buscar os dados:", error);
+      }
+    }
+
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -60,14 +72,16 @@ export default function Home() {
           );
         })}
       </div>
-      {session ? (
+      {!loading && ( // Renderiza apenas quando o carregamento estiver concluído
         <Dialog.Root>
-          <CreateAdBanner />
-          <CreateAdModal />
-        </Dialog.Root>
-      ) : (
-        <Dialog.Root>
-          <AdBannerLoggedOut />
+          {authenticated ? (
+            <>
+              <CreateAdBanner />
+              <CreateAdModal />
+            </>
+          ) : (
+            <AdBannerLoggedOut />
+          )}
         </Dialog.Root>
       )}
     </div>

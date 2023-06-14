@@ -1,66 +1,71 @@
 "use client";
-import axios from "axios";
 import Link from "next/link";
-import { FormEvent, HTMLAttributes, useEffect } from "react";
+import { HTMLAttributes, useEffect } from "react";
 import { useState } from "react";
-import {
-  GetSessionParams,
-  getSession,
-  signIn,
-  useSession,
-} from "next-auth/react";
-import Router, { useRouter } from "next/router";
-import SignInGoogleButton from "@/components/SignInGoogleButton";
+
+import { useContext } from "react";
+import { Context } from "@/Context/AuthContext";
+import { sign } from "crypto";
 
 interface ICustomDivProps extends HTMLAttributes<HTMLDivElement> {
   value: boolean;
 }
+
+interface ICredentials {
+  email: string;
+  password: string;
+}
 export function Login() {
-  const { data: session } = useSession();
   const [errorMessage, setErrorMessage] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(true);
-  const [data, setData] = useState({
+  const [loading, setLoading] = useState(true); // Nova flag de carregamento
+  const [data, setData] = useState<ICredentials>({
     email: "",
     password: "",
   });
+  const { authenticated, handleLogin } = useContext(Context) as {
+    authenticated: boolean;
+    handleLogin: any;
+  };
 
   useEffect(() => {
+    setLoading(false); // Marca o carregamento como concluído
     checkSession();
-  }, []);
-  console.log(session);
+  }, [authenticated]);
 
   async function checkSession() {
-    const session = await getSession();
-
-    if (session) {
+    if (authenticated) {
+      setLoading(true); // Marca o carregamento novamente antes do redirecionamento
       window.location.href = "/";
     }
   }
 
+  // outras propriedades HTML válidas para um elemento <div>
   const divProps: ICustomDivProps = {
     value: errorMessage,
-    // outras propriedades HTML válidas para um elemento <div>
   };
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
 
-    const res = await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    });
-
-    if (res?.status === 401) {
-      setErrorMessage(true);
-    } else {
-      setErrorMessage(false);
-      Router.push("/");
-    }
+  // ou retorne um indicador de carregamento, como uma animação
+  if (loading) {
+    return null;
   }
 
+  function signIn(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    handleLogin(data)
+      .then((res: any) => {
+        console.log(res);
+        setErrorMessage(false);
+      })
+      .catch((error: any) => {
+        console.error(error);
+        if (error.response && error.response.status === 401) {
+          setErrorMessage(true);
+        }
+      });
+  }
   return (
     <div className="containerLogin ">
-      <form onSubmit={onSubmit}>
+      <form>
         <div className="">
           <div className="logoLogin">
             <Link href="/">
@@ -107,10 +112,13 @@ export function Login() {
             />
           </div>
           <div className="containerButtonLogin">
-            <button className="buttonLogin" type="submit">
+            <button
+              className="buttonLogin"
+              type="button"
+              onClick={(e) => signIn(e)}
+            >
               Login
             </button>
-            <SignInGoogleButton />
           </div>
           <Link className="linkForgetPasswordLogin" href="#">
             Esqueceu a senha?

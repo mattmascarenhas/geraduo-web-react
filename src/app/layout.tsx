@@ -3,7 +3,7 @@ import "../styles/global.css";
 import "../styles/login.css";
 import "../styles/register.css";
 import Provider from "@/components/Provider";
-
+import { AuthProvider } from "../Context/AuthContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -13,11 +13,11 @@ export const metadata = {
 
 export function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <Provider>
+    <AuthProvider>
       <html lang="en">
         <body className={inter.className}>{children}</body>
       </html>
-    </Provider>
+    </AuthProvider>
   );
 }
 export default RootLayout;

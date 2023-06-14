@@ -12,20 +12,23 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
     CredentialsProvider({
-      type: "credentials",
-      credentials: {},
-      // url: "0.0.0.0",
-      // server: { host: "0.0.0.0", port: "http://localhost:5146" },
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
       async authorize(credentials, req) {
         const { email, password } = credentials as {
           email: string;
           password: string;
         };
+        console.log("passou aqui");
         try {
-          const response = await axios.post(`http://localhost:5146/players`, {
+          const response = await axios.post(`http://localhost:5146/v1/player`, {
             email,
             password,
           });
+
           const user = response.data;
           if (!user) {
             throw new Error("Invalid credentials");
@@ -41,9 +44,12 @@ export const authOptions = {
     signIn: "/signin",
   },
 };
-const handler = NextAuth(authOptions);
+// const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+// export { handler as GET, handler as POST };
+
+export default NextAuth(authOptions);
+
 // export const authOptions: NextAuthOptions = {
 //   session: {
 //     strategy: "jwt",

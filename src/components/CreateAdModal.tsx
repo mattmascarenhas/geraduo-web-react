@@ -19,7 +19,33 @@ export function CreateAdModal() {
       .then((res) => setGames(res.data));
   }, []);
 
-  function handleCreateAd() {}
+  function handleCreateAd(event: React.ChangeEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+
+    //validacao simples p/ previnir de enviar o form vazio
+    if (!data.PlayerId) {
+      return;
+    }
+    console.log(data);
+    console.log(event);
+
+    // try {
+    //   axios.post("http://localhost:5146/v1/ad", {
+    //     playerId: data.playerId,
+    //     gameId: data.gameId,
+    //     discord: data.discord,
+    //     weekDays: weekDays.map(Number),
+    //     hourStart: data.hourStart,
+    //     hourEnd: data.hourEnd,
+    //   });
+    //   alert("Anúncio criado com sucesso!");
+    // } catch (err) {
+    //   console.log(err);
+    //   alert("Erro ao criar o anúncio!");
+    // }
+  }
 
   return (
     <Dialog.Portal>
@@ -152,22 +178,16 @@ export function CreateAdModal() {
                 />
               </div>
             </div>
-            <footer className="mt-4 flex justify-end gap-4">
-              <Dialog.Close
-                type="button"
-                className="bg-zinc-500 px-5 h-12 rounded-md font-semibold hover:bg-zinc-600"
-              >
-                Cancelar
-              </Dialog.Close>
-              <button
-                type="submit"
-                className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-600"
-              >
-                <GameControllerIcon />
-                Encontrar Duo
-              </button>
-            </footer>
           </div>
+          <footer className="footerButtons">
+            <Dialog.Close type="button" className="cancelButton">
+              Cancelar
+            </Dialog.Close>
+            <button type="submit" className="findDuoButton">
+              <GameControllerIcon />
+              Encontrar Duo
+            </button>
+          </footer>
         </form>
       </Dialog.Content>
     </Dialog.Portal>
