@@ -1,27 +1,17 @@
 "use client";
 import Link from "next/link";
-import { HTMLAttributes, useEffect } from "react";
-import { useState } from "react";
-
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Context } from "@/Context/AuthContext";
-import { sign } from "crypto";
+import { ICredentials, ICustomDivProps } from "@/utils/Interfaces";
 
-interface ICustomDivProps extends HTMLAttributes<HTMLDivElement> {
-  value: boolean;
-}
-
-interface ICredentials {
-  email: string;
-  password: string;
-}
 export function Login() {
-  const [errorMessage, setErrorMessage] = useState(false);
-  const [loading, setLoading] = useState(true); // Nova flag de carregamento
+  const [errorMessage, setErrorMessage] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true); // Nova flag de carregamento
   const [data, setData] = useState<ICredentials>({
     email: "",
     password: "",
   });
+
   const { authenticated, handleLogin } = useContext(Context) as {
     authenticated: boolean;
     handleLogin: any;

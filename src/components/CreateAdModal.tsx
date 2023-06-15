@@ -1,18 +1,19 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import axios from "axios";
 import { Input } from "./inputs/Input";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import GameControllerIcon from "./icons/GameController";
+import { Context } from "@/Context/AuthContext";
+import { IUserData, IGame } from "@/utils/Interfaces";
+import convertHourStringToMinutes from "@/utils/convert-hour";
 
-interface IGame {
-  id: string;
-  title: string;
-}
 export function CreateAdModal() {
   const [games, setGames] = useState<IGame[]>([]);
   const [weekDays, setWeekDays] = useState<string[]>([]);
-
+  const { userData } = useContext(Context) as {
+    userData: IUserData;
+  };
   useEffect(() => {
     axios
       .get("http://localhost:5146/v1/games")
@@ -20,31 +21,25 @@ export function CreateAdModal() {
   }, []);
 
   function handleCreateAd(event: React.ChangeEvent<HTMLFormElement>) {
-    event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
 
-    //validacao simples p/ previnir de enviar o form vazio
-    if (!data.PlayerId) {
-      return;
-    }
     console.log(data);
-    console.log(event);
 
-    // try {
-    //   axios.post("http://localhost:5146/v1/ad", {
-    //     playerId: data.playerId,
-    //     gameId: data.gameId,
-    //     discord: data.discord,
-    //     weekDays: weekDays.map(Number),
-    //     hourStart: data.hourStart,
-    //     hourEnd: data.hourEnd,
-    //   });
-    //   alert("Anúncio criado com sucesso!");
-    // } catch (err) {
-    //   console.log(err);
-    //   alert("Erro ao criar o anúncio!");
-    // }
+    try {
+      axios.post("http://localhost:5146/v1/ad", {
+        PlayerId: data.playerId,
+        GameId: data.gameId,
+        PlayerName: data.playerName,
+        WeekDays: weekDays.map(Number).toString(),
+        HourStart: convertHourStringToMinutes(data.hourStart.toString()),
+        HourEnd: convertHourStringToMinutes(data.hourEnd.toString()),
+      });
+      alert("Anúncio criado com sucesso!");
+    } catch (err) {
+      console.log(err);
+      alert("Erro ao criar o anúncio!");
+    }
   }
 
   return (
@@ -57,11 +52,11 @@ export function CreateAdModal() {
         <form onSubmit={handleCreateAd} className="createAdForm">
           <div className="createAdInput">
             <label htmlFor="">Qual o Game?</label>
-            <select name="game" id="game" className="createAdSelectInput">
+            <select name="gameId" id="gameId" className="createAdSelectInput">
               <option>Selecione um game</option>
               {games.map((game) => {
                 return (
-                  <option value="" key={game.id}>
+                  <option value={game.id} key={game.id}>
                     {game.title}
                   </option>
                 );
@@ -70,10 +65,24 @@ export function CreateAdModal() {
             <div className="createAdInput">
               <label htmlFor="name">Seu nome (ou nickname)</label>
               <Input
-                name="name"
-                id="name"
+                name="playerName"
+                id="playerName"
                 type="text"
                 placeholder="Como te chamam dentro do game"
+                defaultValue={`${userData.name} (${userData.nickName})`}
+              />
+              <input
+                //input invisivel para capturar o valor do id
+                name="playerId"
+                id="playerId"
+                type="text"
+                defaultValue={userData.id}
+                style={{
+                  display: "none",
+                  width: "0",
+                  height: "0",
+                  overflow: "hidden",
+                }}
               />
             </div>
           </div>
@@ -85,6 +94,8 @@ export function CreateAdModal() {
               id="discord"
               type="text"
               placeholder="usuario#0000"
+              defaultValue={userData.discord}
+              readOnly
             />
           </div>
           <div style={{ display: "flex", gap: 24 }}>

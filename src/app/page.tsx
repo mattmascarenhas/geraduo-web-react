@@ -1,27 +1,21 @@
 "use client";
-import CreateAdBanner from "@/components/CreateAdBanner";
-import * as Dialog from "@radix-ui/react-dialog";
-import axios from "axios";
 import { useEffect, useState, useContext } from "react";
-import React from "react";
-import "keen-slider/keen-slider.min.css";
-import { useKeenSlider } from "keen-slider/react"; // import from 'keen-slider/react.es' for to get an ES module
+import axios from "axios";
+import CreateAdBanner from "@/components/CreateAdBanner";
 import AdBannerLoggedOut from "@/components/AdBannerLoggedOut";
 import CreateAdModal from "@/components/CreateAdModal";
 import { Context } from "@/Context/AuthContext";
-
-interface IGame {
-  id: string;
-  title: string;
-  bannerUrl: string;
-}
+import { IGame } from "@/utils/Interfaces";
+import * as Dialog from "@radix-ui/react-dialog";
+import "keen-slider/keen-slider.min.css";
+import { useKeenSlider } from "keen-slider/react";
 
 export default function Home() {
   const { authenticated } = useContext(Context) as {
     authenticated: boolean;
   };
   const [games, setGames] = useState<IGame[]>([]);
-  // const { data: session } = useSession();
+
   const sliderOptions = {
     slides: {
       perView: 6.2,
@@ -30,8 +24,6 @@ export default function Home() {
   };
   const [internalSliderRef, internalSlider] = useKeenSlider(sliderOptions);
   const [loading, setLoading] = useState(true); // Nova flag de carregamento
-
-  //console.log(session);
 
   useEffect(() => {
     async function fetchData() {

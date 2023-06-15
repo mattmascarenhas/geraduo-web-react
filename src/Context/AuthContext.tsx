@@ -1,27 +1,33 @@
 "use client";
+import { IUserData, ICredentials } from "@/utils/Interfaces";
 import axios from "axios";
 import { createContext, useState, useEffect } from "react";
-
-interface ICredentials {
-  email: string;
-  password: string;
-}
 
 const Context = createContext({});
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const [userData, setUserData] = useState<IUserData>();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (token) {
       axios.create({
         baseURL: "http://localhost:5146",
       }).defaults.headers.head.Authorization = `Bearer ${JSON.parse(token)}`;
       setAuthenticated(true);
     }
+    // Recupere os dados do usuário a partir do localStorage
+    const storedUserData = localStorage.getItem("userData");
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
+    }
   }, []);
+
+  // Atualiza os dados do usuário no localStorage sempre que userData for alterado
+  useEffect(() => {
+    localStorage.setItem("userData", JSON.stringify(userData));
+  }, [userData]);
 
   async function handleLogin(credentials: ICredentials) {
     //credenciais vinda da tela de login
@@ -46,12 +52,22 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     }).defaults.headers.head.Authorization = `Bearer ${token}`;
     //verificação para saber se o usuario foi autenticado
     const user = response.data;
+
     if (!user) {
       throw new Error("Invalid credentials");
     } else {
+      // Remove a propriedade "token" do objeto "user"
+      const { token, ...userDataWithoutToken } = user;
+
+      //AUTENTICA
       setAuthenticated(true);
+
+      // Armazena os dados do usuário (sem o token) no localStorage
+      localStorage.setItem("userData", JSON.stringify(userDataWithoutToken));
+
       window.location.href = "/";
     }
+
     return response;
   }
 
@@ -64,7 +80,9 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <Context.Provider value={{ authenticated, handleLogin, handleLogout }}>
+    <Context.Provider
+      value={{ authenticated, handleLogin, handleLogout, userData }}
+    >
       {children}
     </Context.Provider>
   );
