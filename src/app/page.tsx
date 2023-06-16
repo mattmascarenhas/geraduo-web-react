@@ -16,9 +16,34 @@ export default function Home() {
   };
   const [games, setGames] = useState<IGame[]>([]);
 
+  const [slidesPerView, setSlidesPerView] = useState(6.2);
+
+  const handleResize = () => {
+    if (window.innerWidth >= 1200) {
+      setSlidesPerView(6.2);
+    } else if (window.innerWidth >= 992) {
+      setSlidesPerView(4.2);
+    } else if (window.innerWidth >= 768) {
+      setSlidesPerView(3.2);
+    } else if (window.innerWidth >= 576) {
+      setSlidesPerView(2.8);
+    } else {
+      setSlidesPerView(2.5);
+    }
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const sliderOptions = {
     slides: {
-      perView: 6.2,
+      perView: slidesPerView,
       spacing: 10,
     },
   };
@@ -47,8 +72,10 @@ export default function Home() {
 
   return (
     <div className="container">
-      <img src="logo-esports.svg" alt="" />
-      <h1 className="h1Title">Encontre seu duo aqui!</h1>
+      <img src="logo-esports.svg" alt="" className="imgLogoMain" />
+      <h1 className="h1Title">
+        Encontre seu <span className="h1TittleDuo">duo</span> aqui!
+      </h1>
       <div className="gameBanner keen-slider" ref={internalSliderRef}>
         {games.map((game) => {
           return (
@@ -56,7 +83,7 @@ export default function Home() {
               className="containerGameBanner keen-slider__slide"
               key={game.id}
             >
-              <img src={game.bannerUrl} alt="" width={204} height={272} />
+              <img src={game.bannerUrl} alt="" className="imgGameBanner" />
               <div className="gameBannerInfo">
                 <strong className="titleGameBanner">{game.title}</strong>
               </div>

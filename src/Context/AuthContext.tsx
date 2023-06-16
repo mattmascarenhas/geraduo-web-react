@@ -26,7 +26,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Atualiza os dados do usuário no localStorage sempre que userData for alterado
   useEffect(() => {
-    localStorage.setItem("userData", JSON.stringify(userData));
+    const token = localStorage.getItem("token");
+    if (token) localStorage.setItem("userData", JSON.stringify(userData));
   }, [userData]);
 
   async function handleLogin(credentials: ICredentials) {
@@ -61,9 +62,9 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
       //AUTENTICA
       setAuthenticated(true);
-
       // Armazena os dados do usuário (sem o token) no localStorage
-      localStorage.setItem("userData", JSON.stringify(userDataWithoutToken));
+      if (token)
+        localStorage.setItem("userData", JSON.stringify(userDataWithoutToken));
 
       window.location.href = "/";
     }
@@ -74,6 +75,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   function handleLogout() {
     setAuthenticated(false);
     localStorage.removeItem("token");
+    localStorage.removeItem("userData");
     axios.create({
       baseURL: "http://localhost:5146",
     }).defaults.headers.head.Authorization = undefined;

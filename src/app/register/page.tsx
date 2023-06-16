@@ -12,18 +12,18 @@ export function Register() {
     const formElement = event.target as HTMLFormElement; // Converter o tipo do evento para HTMLFormElement
     const formData = new FormData(formElement);
     const data = Object.fromEntries(formData);
-    console.log(formData);
+    console.log(data);
 
     if (data.password !== data.passwordConfirm)
       return alert("As senhas não coincidem");
     else {
       try {
         await axios.post(`http://localhost:5146/v1/player`, {
-          name: data.name,
-          nickname: data.nickname,
-          email: data.email,
-          password: data.password,
-          discord: data.discord,
+          Name: data.name,
+          NickName: data.nickname,
+          Email: data.email,
+          Password: data.password,
+          Discord: data.discord,
         });
         return alert("Cliente cadastrado com sucesso!");
       } catch (error) {
@@ -73,7 +73,21 @@ export function Register() {
         <Link href="/">
           <img src="logo-esports.svg" alt="" />
         </Link>
-        <h1>blabla</h1>
+        <div
+          style={{
+            marginTop: 100,
+            marginInline: 100,
+            textAlign: "center",
+            textTransform: "uppercase",
+          }}
+        >
+          <h1> Bem-vindo ao nosso site de geração de duos!</h1>
+          <h2>
+            Aqui, oferecemos uma plataforma emocionante onde jogadores
+            apaixonados podem se cadastrar e encontrar um parceiro para
+            emocionantes partidas em duplas.
+          </h2>
+        </div>
       </div>
     </div>
   );
